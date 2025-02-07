@@ -6,6 +6,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig({
   plugins: [preact(), tsconfigPaths()],
   build: {
+    target: 'esnext',
     rollupOptions: {
       plugins: [
         visualizer({
