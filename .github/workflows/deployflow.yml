@@ -1,57 +1,26 @@
-name: Build and Deploy App
-
-on:
-  push:
-    branches:
-      - main
-
+name: Build and Deploy
+on: [push]
+permissions:
+  contents: write
 jobs:
-  # Build job: builds the app and uploads the artifact for GitHub Pages.
-  build:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
         with:
-          node-version: '16'
-
-      - name: Install dependencies
+          persist-credentials: false
+      - uses: c-hive/gha-yarn-cache@v2
+      - name: Install modules
         run: yarn
-
-      - name: Build the app
+        shell: bash
+      - name: Build code
         run: yarn build
-
-      # Ensure the build output (e.g. the 'dist' directory) is uploaded using the dedicated Pages action.
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
+        shell: bash
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: './dist'
-
-  # Deploy job: downloads the artifact and deploys it to GitHub Pages.
-  deploy:
-    # Add a dependency on the build job
-    needs: build
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment.
-    permissions:
-      pages: write # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
-
-    # Deploy to the github-pages environment.
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      # Download the artifact created in the build job.
-      - name: Download artifact from build
-        uses: actions/download-artifact@v4
-
-      # Deploy to GitHub Pages.
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          folder: dist
