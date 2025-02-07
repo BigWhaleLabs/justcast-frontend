@@ -12,13 +12,15 @@
   },
   "dependencies": {
     "jotai": "^2.10.2",
-    "preact": "^10.24.3"
+    "preact": "^10.24.3",
+    "react-syntax-highlighter": "^15.6.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.1",
     "@tailwindcss/typography": "^0.5.15",
     "@types/eslint-plugin-tailwindcss": "^3",
     "@types/node": "^22.9.0",
+    "@types/react-syntax-highlighter": "^15",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
     "@vitejs/plugin-react": "^4.3.3",
